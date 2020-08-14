@@ -26,9 +26,20 @@
 }
 </style>
 <script>
-  import storage from './../storage/index.js'
-
   export default{
+    name:'app',
+    components:{
 
+    },
+    data(){
+      return {
+        res:{}
+      }
+    },
+    mounted() {
+      this.axios.get('/mock/user/login.json').then((res)=>{
+        this.res = res;
+      })
+    },
   }
 </script>
