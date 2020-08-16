@@ -10,12 +10,14 @@
 // @ is an alias to /src
 import NavFooter from '@/components/NavFooter.vue'
 import NavHeader from '@/components/NavHeader.vue'
+import ServiceBar from '@/components/ServiceBar.vue'
 
 export default {
   name: 'Home',
   components: {
     NavFooter,
-    NavHeader
+    NavHeader,
+    ServiceBar
   }
 }
 </script>
