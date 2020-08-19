@@ -22,9 +22,21 @@
       }
     },
     mounted() {
-    //   this.axios.get('/mock/user/login.json').then((res)=>{
-    //     this.res = res;
-    //   })
+        this.getUser();
+        this.getCartSum();
+
     },
+    methods:{
+        getUser(){
+            this.axios.get('/user').then(()=>{
+
+            })
+        },
+        getCartSum(){
+            this.axios.get('/carts/products/sum').then(()=>{
+
+            })
+        }
+    }
   }
 </script>
