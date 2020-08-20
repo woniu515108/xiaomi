@@ -391,7 +391,7 @@
                 showModal:false
             }
         },
-        mounted(){
+    mounted(){
       this.init();
     },
     methods:{
@@ -419,6 +419,6 @@
         this.$router.push('/cart');
       }
     }
-    }
+}
 </script>
 

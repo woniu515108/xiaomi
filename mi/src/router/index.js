@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../pages/Home.vue'
 import Index from '../pages/Index.vue'
-import Prodecut from '../pages/Product.vue'
+import Product from '../pages/Product.vue'
 import Detail from '../pages/Detail.vue'
 import Cart from '../pages/Cart.vue'
 import Order from '../pages/Order.vue'
@@ -28,8 +28,8 @@ Vue.use(VueRouter)
       },
       {
         path: '/product/:id',
-        name: 'Prodecut',
-        component: Prodecut,
+        name: 'Product',
+        component: Product,
       },
       {
         path: '/detail/:id',

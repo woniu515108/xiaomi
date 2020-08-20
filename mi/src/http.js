@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Message } from 'element-ui';
 
 // 根据前端的跨域方式做调整
 axios.defaults = Object.assign(axios.defaults,{
@@ -14,13 +15,17 @@ axios.interceptors.response.use((response)=>{
     if(res.status == 0){
         return res.data;
     }else if(res.status == 10){
-        if(path != '#/index'){
-            window.location.href = '/#/login';
-        }
+        window.location.href = '/#/login';
+        return Promise.reject()
     }else{
-        alert(res.msg);
+        Message.warning(res.msg);
         return Promise.reject()
     }
+},(error)=>{
+    let res = error.response;
+    Message.error(res.data.message);
+    return Promise.reject(error)
 })
+
 
 export default axios;
