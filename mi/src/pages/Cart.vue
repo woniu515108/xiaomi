@@ -58,6 +58,7 @@
     import OrderHeader from './../components/OrderHeader.vue';
     import ServiceBar from './../components/ServiceBar.vue';
     import NavFooter from './../components/NavFooter.vue';
+    import { Message } from 'element-ui'
     export default{
         name:'Cart',
         components:{
@@ -67,8 +68,8 @@
         },
         data(){
             return {
-                list:[],
-                allChecked:false,
+                list:[],  //商品列表
+                allChecked:false,  // 是否全选
                 cartTotalPrice:0,
                 checkedNum:0
             }
@@ -77,19 +78,63 @@
             this.getCartList();
         },
         methods: {
+          // 公共赋值
+          renderData(res) {
+            this.list = res.cartProductVoList || [];
+            this.allChecked = res.selectedAll;
+            this.cartTotalPrice = res.cartTotalPrice;
+            this.checkedNum = this.list.filter(item=>item.productSelected).length;
+          },
             getCartList(){
                 this.axios.get('/carts').then((res)=>{
-                    this.list = res.cartProductVoList || [];
-                    this.allChecked = res.selectedAll;
-                    this.cartTotalPrice = res.cartTotalPrice;
-                    this.checkNum = this.list.filter(item=>item.productSelected)
+                  this.renderData(res);
+
                 })
             },
             toggleAll(){
-
+              let url = this.allChecked ? '/carts/unSelectAll' : '/carts/selectAll';
+              this.axios.put(url).then((res)=>{
+                this.renderData(res);
+              })
+            },
+            updateCart(item,type){
+              let quantity = item.quantity,
+                  selected = item.productSelected;
+              if(type == '-'){
+                if(quantity == 1){
+                  Message.info('商品至少保留一件');
+                  return;
+                }
+                -- quantity;
+              }else if(type == '+'){
+                if(quantity > item.productStock){
+                  alert('商品不能超过库存数量');
+                  return;
+                }
+                ++ quantity;
+              }else{
+                selected = !item.productSelected;
+              }
+              this.axios.put(`/carts/${item.productId}`,{
+                quantity,
+                selected
+              }).then((res)=>{
+                this.renderData(res);
+              })
+            },
+            // 删除商品
+            delProduct(item){
+              this.axios.delete(`/carts/${item.productId}`).then((res)=>{
+                this.renderData(res);
+              })
             },
             order(){
-
+              let isCheck = this.list.every(item=>!item.productSelected);
+              if(isCheck){
+                alert('请选择一件商品')
+              }else{
+                this.$router.push('/order/comfirm');
+              }
             }
         },
     }
