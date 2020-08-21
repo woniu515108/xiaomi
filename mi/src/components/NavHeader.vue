@@ -11,6 +11,7 @@
                 <div class="topbar-user">
                     <a href="javascript:;" v-if='username'>{{username}}</a>
                     <a href="javascript:;" v-if='!username' @click='login()'>登录</a>
+                    <a href="javascript:;" v-if='username' @click='logout()'>退出</a>
                     <a href="javascript:;" v-if='username'>我的订单</a>
                     <a href="javascript:;" class="my-cart" @click="goToCart()"><span class="icon-cart"></span>购物车({{cartCount}})</a>
                 </div>
@@ -315,6 +316,7 @@
 </style>
 <script>
     import { mapState } from 'vuex';
+    import { Message } from 'element-ui';
     export default{
         name:'NavHeader',
         data(){
@@ -332,12 +334,27 @@
             }
         },
         mounted() {
-            this.getProduceList()
+            this.getProduceList();
+            let params = this.$route.params;
+            if(params && params.from == 'login'){
+                this.getCartSum();
+            }
         },
         methods: {
+            // 登录
             login(){
                 this.$router.push('/login');
             },
+            // 退出登录
+            logout(){
+                this.axios.post('/user/logout').then(()=>{
+                    Message.success('退出登录');
+                    this.$cookie.set('userId','',{expires:'-1'});
+                    this.$store.dispatch('saveUserName',"");
+                    this.$store.dispatch('saveCartCount','0');
+                })
+            },
+            // 获取商品列表
             getProduceList(){
                 this.axios.get('/products',{
                     params:{
@@ -350,6 +367,12 @@
                     }
                 })
             
+            },
+            // 获取购物车数量
+            getCartSum(){
+                this.axios.get('/carts/products/sum').then((res)=>{
+                    this.$store.dispatch('saveCartCount',res)
+                })
             },
             // 跳转我的购物车
             goToCart(){

@@ -38,7 +38,8 @@
   </template>
 
     <script>
-      import { mapActions } from 'vuex';
+        import { Message } from 'element-ui';
+        import { mapActions } from 'vuex';
         export default{
             name:'Login',
             data(){
@@ -56,10 +57,16 @@
                         username,
                         password
                     }).then((res)=>{
-                        this.$cookie.set('userId',res.id,{expires:'1M'});
+                        Message.success('登录成功');
+                        this.$cookie.set('userId',res.id,{expires:Session});
                         // this.$store.dispatch('saveUserName',res.username)
                         this.saveUserName(res.username);
-                        this.$router.push('/index')
+                        this.$router.push({
+                            name:'Index',
+                            params:{
+                                from:'login'
+                            }
+                        })
                     })
                 },
                 ...mapActions(['saveUserName']),

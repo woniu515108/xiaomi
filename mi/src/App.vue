@@ -22,9 +22,10 @@
       }
     },
     mounted() {
-        this.getUser();
-        this.getCartSum();
-
+        if(this.$cookie.get('userId')){
+            this.getUser();
+            this.getCartSum();
+        }
     },
     methods:{
         getUser(){
