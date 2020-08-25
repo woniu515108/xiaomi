@@ -57,8 +57,8 @@
                         username,
                         password
                     }).then((res)=>{
-                        Message.success('登录成功');
-                        this.$cookie.set('userId',res.id,{expires:Session});
+                      this.$cookie.set('userId',res.id,{expires:'Session'});
+                      Message.success('登录成功');
                         // this.$store.dispatch('saveUserName',res.username)
                         this.saveUserName(res.username);
                         this.$router.push({

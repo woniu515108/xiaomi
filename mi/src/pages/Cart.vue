@@ -134,7 +134,7 @@
               if(isCheck){
                 Message.warning('请选择一件商品')
               }else{
-                this.$router.push('/order/comfirm');
+                this.$router.push('/order/confirm');
               }
             }
         },
