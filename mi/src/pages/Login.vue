@@ -35,7 +35,7 @@
         <p class="copyright">Copyright ©2019 mi.futurefe.com All Rights Reserved.</p>
       </div>
     </div>
-  </template>
+</template>
 
     <script>
         import { Message } from 'element-ui';

@@ -1,5 +1,10 @@
 <template>
     <div class="order-confirm">
+        <order-header title="订单确认">
+            <template v-slot:tip>
+                <span>请认真填写收货地址</span>
+            </template>
+        </order-header>
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position: absolute; width: 0px; height: 0px; overflow: hidden;">
         <defs>
           <symbol id="icon-add" viewBox="0 0 31 32">
@@ -25,7 +30,7 @@
             <div class="item-address">
               <h2 class="addr-title">收货地址</h2>
               <div class="addr-list clearfix">
-                <div class="addr-info" :class="{'checked':index == checkIndex}" v-for="(item,index) in list" :key="index">
+                <div class="addr-info" :class="{'checked':index == checkIndex}" @click="checkIndex = index" v-for="(item,index) in list" :key="index">
                   <h2>{{item.receiverName}}</h2>
                   <div class="phone">{{item.receiverMobile}}</div>
                   <div class="street">{{item.receiverProvince + ' ' + item.receiverCity + ' ' + item.receiverDistrict + ' ' + item.receiverAddress}}</div>
@@ -42,7 +47,7 @@
                     </a>
                   </div>
                 </div>
-                <div class="addr-add"@click="openAddressModal" >
+                <div class="addr-add" @click="openAddressModal" >
                   <div class="icon-add"></div>
                   <div>添加新地址</div>
                 </div>
@@ -118,7 +123,7 @@
                 <option value="天津">天津</option>
                 <option value="河北">河北</option>
               </select>
-              <select name="city"v-model="checkedItem.receiverCity" >
+              <select name="city" v-model="checkedItem.receiverCity" >
                 <option value="北京">北京</option>
                 <option value="天津">天津</option>
                 <option value="河北">石家庄</option>
@@ -153,10 +158,11 @@
         </template>
       </modal>
     </div>
-  </template>
+</template>
   <script>
     import { Message } from 'element-ui';
     import Modal from './../components/Modal'
+    import OrderHeader from './../components/OrderHeader'
   export default{
     name:'OrderConfirm',
     data(){
@@ -176,7 +182,8 @@
       }
     },
     components:{
-        Modal
+        Modal,
+        OrderHeader
     },
     mounted(){
         this.getAdressList();

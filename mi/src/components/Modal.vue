@@ -21,7 +21,7 @@
         </div>
       </div>
     </transition>
-  </template>
+</template>
   <script>
     export default{
       name:'modal',

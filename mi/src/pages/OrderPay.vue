@@ -1,10 +1,10 @@
 <template>
     <div class="order-pay">
-    <!--   <order-header title="订单支付">
-        <template v-slot:tip>
-          <span>请谨防钓鱼链接或诈骗电话，了解更多</span>
-        </template>
-      </order-header> -->
+        <order-header title="订单支付">
+            <template>
+                <span>请谨防钓鱼链接或诈骗电话，了解更多</span>
+            </template>
+        </order-header>
       <div class="wrapper">
         <div class="container">
           <div class="order-wrap">
@@ -55,7 +55,7 @@
           </div>
         </div>
       </div>
-      <scan-pay-code v-if="showPay"></scan-pay-code>
+      <scan-pay-code v-if="showPay" @close='closePayModal' :img="payImg"></scan-pay-code>
       <modal
         title="支付确认"
         btnType="3"
@@ -70,31 +70,34 @@
         </template>
       </modal>
     </div>
-  </template>
+</template>
   <script>
-//   import QRCode from 'qrcode'
-  import OrderHeader from './../components/OrderHeader'
-//   import ScanPayCode from './../components/ScanPayCode'
-  import Modal from './../components/Modal'
+    import QRCode from 'qrcode'
+    import OrderHeader from './../components/OrderHeader'
+    import ScanPayCode from './../components/ScanPayCode'
+    import Modal from './../components/Modal'
+    import { Message } from 'element-ui';
+    import { Form } from 'element-ui'
   export default{
-    name:'order-pay',
+    name:'OrderPay',
     data(){
       return {
-        orderNo:this.$route.query.orderNo,
+        orderId:this.$route.query.orderNo,
         addressInfo:'',  //收货人信息
         orderDetail:'',  //订单详情
-        showPay:'',
+        showPay:false,  //是否显示微信支付弹窗
         showPayModal:false,
-        goOrderList:'',
         showDetail:false,
         payment:0,
         showDetail:false,
-        payType:''
+        payType:'',
+        payImg:'',
+        T:''  //定时器
       }
     },
     components:{
       OrderHeader,
-    //   ScanPayCode,
+      ScanPayCode,
       Modal
     },
     mounted(){
@@ -104,18 +107,53 @@
         // 选择支付方式
         paySubmit(payType){
             if(payType ==1){
-                window.open('/#/order/alipay?orderId='+this.orderNo,'_blank')
+                window.open('/#/order/alipay?orderId='+this.orderId,'_blank')
+            }else{
+                this.axios.post('/pay',{
+                    orderId:this.orderId,
+                    orderName:'Vue高仿小米商城',
+                    amount:0.01,
+                    payType:2
+                }).then((res)=>{
+                    QRCode.toDataURL(res.content).then(url =>{
+                        this.showPay = true;
+                        this.payImg = url;
+                        this.loopOrderState()
+                    })
+                    .catch(err => {
+                        Message.error('微信二维码生成失败，请稍后重试')
+                    })
+                })
             }
         },
+        closePayModal(){
+            this.showPay = false;
+            this.showPayModal = true;
+            clearInterval(this.T)
+        },
         getOrderDetail(){
-            this.axios.get(`/orders/${this.orderNo}`).then((res)=>{
+            this.axios.get(`/orders/${this.orderId}`).then((res)=>{
                 let item = res.shippingVo;
                 console.log('res',res)
                 this.addressInfo = `${item.receiverName} ${item.receiverMobile} ${item.receiverProvince} ${item.receiverCity} ${item.receiverDistrict} ${item.receiverAddress} ${item.receiverZip}`;
                 this.orderDetail = res.orderItemVoList;
-                this.payment = res.payment,
-                this.orderNo = res.orderNo
+                this.payment = res.payment
+                // this.orderNo = res.orderNo
             })
+        },
+        // 轮询当前订单状态
+        loopOrderState(){
+            this.T = setInterval(()=>{
+                this.axios.get(`/orders/${this.orderId}`).then((res)=>{
+                    if(res.status == 20){
+                        clearInterval(this.T);
+                        this.goOrderList();
+                    }
+                })
+            },1000)
+        },
+        goOrderList(){
+            this.$router.push('/order/list');
         }
     }
   }

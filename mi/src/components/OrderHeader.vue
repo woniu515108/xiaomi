@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-  </template>
+</template>
   <script>
     import {mapState} from 'vuex'
     export default{
