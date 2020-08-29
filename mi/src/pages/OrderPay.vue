@@ -23,7 +23,7 @@
             <div class="item-detail" v-if="showDetail">
               <div class="item">
                 <div class="detail-title">订单号：</div>
-                <div class="detail-info theme-color">{{orderNo}}</div>
+                <div class="detail-info theme-color">{{orderId}}</div>
               </div>
               <div class="item">
                 <div class="detail-title">收货信息：</div>
