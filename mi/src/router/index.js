@@ -2,15 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../pages/Home.vue'
 import Index from '../pages/Index.vue'
-import Product from '../pages/Product.vue'
-import Detail from '../pages/Detail.vue'
-import Cart from '../pages/Cart.vue'
-import Order from '../pages/Order.vue'
-import OrderConfirm from '../pages/OrderConfirm.vue'
-import OrderList from '../pages/OrderList.vue'
-import OrderPay from '../pages/OrderPay.vue'
-import AliPay from '../pages/AliPay.vue'
-import Login from '../pages/Login.vue'
+
 
 Vue.use(VueRouter)
 
@@ -29,49 +21,49 @@ Vue.use(VueRouter)
       {
         path: '/product/:id',
         name: 'Product',
-        component: Product,
+        component: ()=> import('./../pages/Product.vue')
       },
       {
         path: '/detail/:id',
         name: 'Detail',
-        component: Detail,
+        component: ()=>import('./../pages/Detail.vue')
       }
     ]
   },
   {
     path: '/cart',
     name: 'Cart',
-    component: Cart,
+    component: ()=>import('./../pages/Cart.vue')
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login,
+    component: ()=>import('./../pages/Login.vue')
   },
   {
     path: '/order',
     name: 'Order',
-    component: Order,
+    component: ()=>import('./../pages/Order.vue'),
     children:[
       {
         path: 'list',
         name: 'OrderList',
-        component: OrderList,
+        component: ()=>import('./../pages/OrderList.vue')
       },
       {
         path: 'confirm',
         name: 'OrderConfirm',
-        component: OrderConfirm,
+        component: ()=>import('./../pages/OrderConfirm.vue')
       },
       {
         path: 'pay',
         name: 'OrderPay',
-        component: OrderPay,
+        component: ()=>import('./../pages/OrderPay.vue')
       },
       {
         path: 'alipay',
         name: 'AliPay',
-        component: AliPay,
+        component: ()=>import('./../pages/AliPay.vue')
       },
     ]
   }

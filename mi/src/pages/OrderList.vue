@@ -189,7 +189,7 @@
       padding-bottom:110px;
       .order-box{
         .order{
-          @include border();
+          @include border();  
           background-color:$colorG;
           margin-bottom:31px;
           &:last-child{
